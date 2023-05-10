@@ -1,5 +1,5 @@
 {
-  "name": "angular-azure",
+  "name": "passion-froid",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -19,6 +19,13 @@
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.0",
     "rxjs": "~7.8.0",
+    "@angular/material": "15.2.9",
+    "@azure/storage-blob": "^12.14.0",
+    "@fortawesome/angular-fontawesome": "^0.10.2",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@material/dialog": "^14.0.0",
+    "body-scroll-lock": "^4.0.0-beta.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },
@@ -26,6 +33,7 @@
     "@angular-devkit/build-angular": "^15.2.0",
     "@angular/cli": "~15.2.0",
     "@angular/compiler-cli": "^15.2.0",
+    "@angular/cdk": "15.2.9",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
@@ -33,6 +41,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~4.9.4"
+    "typescript": "~4.9.4",
+    "@types/body-scroll-lock": "^3.1.0"
   }
 }
