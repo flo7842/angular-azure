@@ -60,7 +60,7 @@ table {
 	border-spacing: 0;
 }
 
-.custom-dialog-container .mat-dialog-container{
+.cdk-overlay-container{
 	z-index: 1000!important;
 	align-items: center !important;
 	background: rgba(255, 255, 255, 0.7) !important;
@@ -72,6 +72,10 @@ table {
 	position: fixed !important;
 	right: 0 !important;
 	top: 0 !important;
+
+	#cdk-overlay-0{
+		all: unset;
+	}
 }
 
 .filter-list{

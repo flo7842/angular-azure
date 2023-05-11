@@ -11,11 +11,13 @@ export class ImageService {
   "assets/img/chicken-tika.jpg", "assets/img/food.jpg", "assets/img/chicken-tika.jpg",
   "assets/img/chicken-tika.jpg", "assets/img/food.jpg", "assets/img/tomatoes.jpg"];
 
+  basePathApi = environment.api_host + "/api";
+
   constructor(private httpClient: HttpClient) { }
 
   add(name: string, base64: string){
     return new Promise((resolve, rejects) => {
-      this.httpClient.post(environment.api_host + '/images/create', { name: name, base64: base64 }).subscribe((data: any) => {
+      this.httpClient.post(this.basePathApi + '/images/create', { name: name, base64: base64 }).subscribe((data: any) => {
         if(data){
           resolve(data);
         }
