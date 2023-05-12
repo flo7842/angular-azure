@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, observeOn, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 import { Error } from '../models/error';
 @Injectable({
   providedIn: 'root'
@@ -34,6 +34,8 @@ export class UserService {
 
  
   public login(user: any):Observable<any> {
+   
+    
     this.errors = []
     return this.http.post(environment.api_host + '/api/token/', JSON.stringify(user), this.httpOptions).pipe(
       catchError(error => {
