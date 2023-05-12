@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, observeOn } from 'rxjs';
+import { Observable, catchError, observeOn, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,14 @@ export class UserService {
 
  
   public login(user: any):Observable<any> {
-    return this.http.post(environment.api_host + '/api/token/', JSON.stringify(user), this.httpOptions)
+    return this.http.post(environment.api_host + '/api/token/', JSON.stringify(user), this.httpOptions).pipe(
+      catchError(error => {
+        
+        this.errors = error['error'];
+        
+        return throwError(() => this.errors);
+      })
+    )
     // .subscribe(
     //   (data: any) => {
     //     console.log(data);
