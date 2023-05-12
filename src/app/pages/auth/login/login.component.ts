@@ -24,13 +24,18 @@ export class LoginComponent implements OnInit {
 
   loginCheck(f: NgForm){
       this._userService.login({'username': f.controls["email"].value, 'password': f.controls["password"].value}).subscribe(
-        (data: any) => {
-        
-        this._userService.updateData(data['access']);
-        this.router.navigate(['/list-images'])
-      }, (err: any) => {
-          this.errors = err
+        {
+          next: (v) => this._userService.updateData(v['access']),
+          error: (e) => this.errors = e,
+          complete: () => this.router.navigate(['/list-images']) 
       })
+      //   (data: any) => {
+        
+      //   this._userService.updateData(data['access']);
+      //   this.router.navigate(['/list-images'])
+      // }, (err: any) => {
+      //     this.errors = err
+      // })
   }
  
   refreshToken() {
