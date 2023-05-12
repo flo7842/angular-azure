@@ -20,6 +20,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import { ImageService } from './services/image.service';
 import { LoginComponent } from './pages/auth/login/login.component';
+import { UploadFormComponent } from './components/form/upload-form/upload-form.component';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { LoginComponent } from './pages/auth/login/login.component';
     TableComponent,
     GalleryComponent,
     ModalUploadComponent,
-    LoginComponent
+    LoginComponent,
+    UploadFormComponent
   ],
   imports: [
     BrowserModule,

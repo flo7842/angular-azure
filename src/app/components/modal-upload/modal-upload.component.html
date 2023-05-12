@@ -3,63 +3,9 @@
         <fa-icon mat-raised-button [mat-dialog-close]="false" [icon]="faClose" class="close-btn"></fa-icon>
         <ng-container *ngIf="data.name === 'upload'; else editModal">
             <h2 mat-dialog-title>Charger une image depuis {{titleModal}} </h2>
-            <form #uploadForm="ngForm" (ngSubmit)="onFormSubmit(uploadForm)">
-                <div class="choices-buttons">
-                    <p>
-                        <input type="radio" value="url" name="image" [(ngModel)]="selectedOption" (change)="onSelected($event)"> Image URL
-                        <input type="radio" value="file" name="image" [(ngModel)]="selectedOption" (change)="onSelected($event)"> Image file
-                    </p>
-                    <div class="file-input-upload-bis" *ngIf="selectedImages.length > 0">
-                        <label for="file-input">
-                            <fa-icon [icon]="faUpload" class="icon-upload"></fa-icon>
-                        </label>
-                    </div>
-                </div>
-                <div [ngClass]="{'choice-images': loaded == true, 'choice-images-bis': loaded == false || selectedImages.length == 1, 'choice-images-url': selectedOption == 'url' || gallery==false}">
-                    <div *ngIf="selectedOption == 'url';else other_content">
-                        <label for="url-input">
-                            Entrez une url au format "jpg / png"
-                            <input matInput type="text" id="myInput" class="url-input" name="url-image" [(ngModel)]="urlImage" placeholder="Entrez une Url">
-                        </label>
-                    </div>
-                    <ng-template #other_content>
-                        <ng-container *ngIf="this.imageSrc != null">
-                            <ng-container *ngIf="gallery">
-                                <div class="img-container" *ngFor="let img of selectedImages; let i = index">
-                                    <img [src]=img alt="img.fileName" class="uploaded-img">
-                                    <div class="overlay-remove">
-                                        <fa-icon [icon]="faTrash" (click)="clearImg(i)"></fa-icon>
-                                    </div>
-                                </div>
-                            </ng-container>
-                            <div class="list-img-name" *ngIf="table">
-                                <div *ngFor="let fileName of allFileNames; let i = index">
-                                    <p>{{fileName}}</p>
-                                    <fa-icon [icon]="faTrash" (click)="clearImg(i)"></fa-icon>
-                                </div>
-                            </div>
-                        </ng-container>
-                        
-                        <div class="file-input-upload">
-                            <label for="file-input">
-                                <fa-icon [icon]="faUpload" class="icon-upload" *ngIf="selectedImages.length == 0"></fa-icon>
-                            </label>
-                        </div>
-                        
-                        <input type="file" #imageInput id="file-input" class="url-input" name="file" (change)="handleInputChange($event)" multiple>
-                    </ng-template>
-                </div>
-            </form>
-            <div class="actions-buttons">
-                <div class="filter-list" *ngIf="selectedOption == 'file';">
-                    <img src="assets/icon/grid.png" alt="icone grid" (click)="toggleComponents('gallery')" class="icon-list" [ngStyle]="{'background-color': gallery ? '#E3E3E3' : 'inherit'}">
-                    <fa-icon [icon]="faList" class="icon-list" (click)="toggleComponents('table')" class="icon-list" [ngStyle]="{'background-color': table ? '#E3E3E3' : 'inherit'}"></fa-icon>
-                </div>
-                <div>
-                    <button mat-raised-button class="submit-btn">Ajouter</button>
-                    <button mat-raised-button [mat-dialog-close]="false" class="cancel-btn">Annuler</button>
-                </div>
-            </div>
+            <app-upload-form></app-upload-form>
+            
+            
         </ng-container>
         
         <ng-template #editModal>
@@ -68,7 +14,7 @@
                 <p>This is the content for modal type B.</p>
                 <div class="actions-buttons">
                     <button mat-raised-button class="submit-btn">Submit</button>
-                    <button mat-raised-button [mat-dialog-close]="false" class="close-btn">Fermer</button>
+                    <button mat-raised-button mat-dialog-close (click)="close()" class="close-btn">Fermer</button>
                 </div>
             </ng-container>
         </ng-template>

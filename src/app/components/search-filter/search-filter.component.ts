@@ -58,7 +58,6 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       height: '250px',
       disableClose: true,
       data: {name: "upload"},
-      panelClass: 'custom-dialog-container'
     });
 
     dialogRef.afterClosed().subscribe(result => {
