@@ -39,9 +39,6 @@ export class ModalUploadComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any, 
-        private http: HttpClient, 
-        private sanitizer: DomSanitizer,
-        private imageService: ImageService
     ) {
         this.imageInput = new ElementRef(null);
     }
@@ -58,7 +55,9 @@ export class ModalUploadComponent implements OnInit {
         }
     }
 
-    
+    close(){
+        this.data.close()
+    }
     
     toDataURL(url: string){
       

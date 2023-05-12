@@ -1,10 +1,7 @@
-export type ImageData = {
-    id: number,
-    name: string,
-    base64: string,
-    tags?: string[],
-    description?: string,
-    user: number
-}
+
 
 export type ImagesData = ImageData[]
+
+export class ImageData {
+    constructor(public name: string, public base64: string, public tags: string | null, public description: string | null, public user: number) {}
+}

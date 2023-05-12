@@ -25,18 +25,18 @@
                 </label>
             </div>
             <ng-template #other_content>
-                <ng-container *ngIf="this.imageSrc != null || droppedImage != null">
+                <ng-container *ngIf="this.selectedImages != null || droppedImage != null">
                     <ng-container *ngIf="gallery">
                         <div class="img-container" *ngFor="let img of selectedImages; let i = index">
-                            <img [src]="img" alt="img.fileName" class="uploaded-img">
+                            <img [src]="img.base64" [alt]="img.name" class="uploaded-img">
                             <div class="overlay-remove">
                                 <fa-icon [icon]="faTrash" (click)="clearImg(i)"></fa-icon>
                             </div>
                         </div>
                     </ng-container>
                     <div class="list-img-name" *ngIf="table">
-                        <div *ngFor="let fileName of allFileNames; let i = index">
-                            <p>{{fileName}}</p>
+                        <div *ngFor="let fileName of selectedImages; let i = index">
+                            <p>{{fileName.name}}</p>
                             <fa-icon [icon]="faTrash" (click)="clearImg(i)"></fa-icon>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 
-                <input type="file" #imageInput id="file-input" class="url-input" name="file" (change)="handleInputChange($event)" multiple>
+                <input type="file" #imageInput id="file-input" class="url-input" name="file" (change)="onFileSelected($event)" multiple>
             </ng-template>
         </div>
     </div>

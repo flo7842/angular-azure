@@ -15,19 +15,8 @@ import { ImageService } from 'src/app/services/image.service';
 export class UploadFormComponent implements OnInit {
 
   @ViewChild('imageInput', { static: false }) imageInput: ElementRef;
-  image: ImageData = {
-    id: 0,
-    name: "",
-    base64: "",
-    user: 0
-  };
-  imagesData: ImagesData = [];
-  selectedImages: ImagesData = [];
-  allFileNames: any = [];
-  fileName = '';
+  selectedImages: any = [];
   loaded: boolean = false;
-  imageLoaded: boolean = false;
-  imageSrc: any = null;
   faUpload = faFileArrowUp;
   faTrash = faTrash;
   faClose = faClose;
@@ -36,14 +25,13 @@ export class UploadFormComponent implements OnInit {
   containerName = "passionfroid-storage-container";
   urlImage: string = '';
   titleModal = "un fichier local";
-  reader: FileReader = new FileReader();
   gallery: boolean = true;
   table: boolean = false;
   selectedOption: string = 'file';
   isDragOver = false;
   droppedImage: any = null;
   characterUrl: any = ""
-  imageId: number = 0
+
   constructor(
     private http: HttpClient, 
     private sanitizer: DomSanitizer,
@@ -69,133 +57,96 @@ export class UploadFormComponent implements OnInit {
     }
   }
 
-  handleInputChange(e: any) {
-    var parts = e.target.value.split("\\");
-    
-    var lastPart = parts[parts.length - 1];
-    this.fileName = lastPart.split(".")[0]
-    
-    var files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
 
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        var pattern = /image-*/;
-        this.image.name = file.name
-        //this.images.push(file.name)
-        if(file.type != undefined){
-            if (!file.type.match(pattern)) {
-                alert('invalid format');
-                return;
-            }
-        }
+  onFileSelected(files: any): void {
+    // Parcourir les fichiers uploadés
+    if(files){
 
-        var reader = new FileReader();
-        reader.onload = this._handleReaderLoaded.bind(this);
+      for (let i = 0; i < files.target.files.length; i++) {
+        const file: any = files.target.files[i];
+        const name = file.name; 
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          const base64 = event.target.result;
+
+          const imageData = new ImageData(name, base64, null, null, 1);
+          
+          this.selectedImages.push(imageData);
+
+          this.loaded = true;
+        };
         reader.readAsDataURL(file);
+        
+      }
     }
-    
-    
     this.loaded = false;
-}
+  }
 
-_handleReaderLoaded(e: any) {
-    var reader = e.target;
-    this.imageSrc = reader.result;
-    this.imagesData.push(this.imageSrc);
-    this.loaded = true;
-}
 
-onInputChange(event: any){
-  console.log(event.target.value, "target");
-  
-  
-  const enteredCharacter = event.target.value; // Retrieve the entered character from the event object
-  this.characterUrl = enteredCharacter
-  console.log(this.characterUrl, "this.characterUrl");
-}
+  onInputChange(event: any){
+    const enteredCharacter = event.target.value;
+    this.characterUrl = enteredCharacter
+  }
 
-onAddUrlImage(){
-  this.imageId = this.imageId+=1
-  let stringBase64 = "";
-  let imageName = this.characterUrl.split("/").pop()
-  
-  
-  this.urlToB64(this.characterUrl)
-        .then((data: any) => {
-          console.log(data, "les datas");
-          this.imagesData.push(data)
-          this.image.id = this.imageId
-          this.image.name = imageName
-          this.image.base64 = data
-          this.selectedImages.push(data)
-          this.allFileNames.push(imageName)
-          this.imagesData.push(this.image)
-
-          console.log(this.imagesData, "this.image");
-        })
-  
-}
-
-async urlToB64(url: string){
-    return fetch(this.urlImage)
-        .then(response => response.blob())
-        .then(blob => new Promise((resolve, reject) => {
-            const reader = new FileReader()
-            reader.onloadend = () => resolve(reader.result)
-            reader.onerror = reject
-            reader.readAsDataURL(blob)
-        }))
-}
-
-onFormSubmit(form: NgForm) {
+  onAddUrlImage(){
     let stringBase64 = "";
-  
+    let imageName = this.characterUrl.split("/").pop()
+    
+    this.urlToB64(this.characterUrl)
+          .then((data: any) => {
+            const imageData = new ImageData(imageName, data, null, null, 1);
+            this.selectedImages.push(imageData)
+          })
+  }
 
-    console.log(this.allFileNames, "Les images");
-    console.log(this.imagesData, "Les images");
-    console.log(this.selectedImages, "Les images");
-    for(let image in this.selectedImages){
-      stringBase64 = image.split(",")[1]
-      //this.imageService.add(this.fileName, image).catch((err) => {console.log(err, "err");})
-    }
+  async urlToB64(url: string){
+      return fetch(this.urlImage)
+          .then(response => response.blob())
+          .then(blob => new Promise((resolve, reject) => {
+              const reader = new FileReader()
+              reader.onloadend = () => resolve(reader.result)
+              reader.onerror = reject
+              reader.readAsDataURL(blob)
+          }))
+  }
+
+  onFormSubmit(form: NgForm) {
+      let stringBase64 = "";
     
-    
-}
+      for(let image of this.selectedImages){
+        stringBase64 = image.base64.split(",")[1]
+        this.imageService.add(image.name, stringBase64).catch((err) => {console.log(err, "err");})
+      }
+  }
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
     this.isDragOver = true;
-}
+  }
 
-onDrop(event: DragEvent): void {
+  onDrop(event: DragEvent): void {
     event.preventDefault();
-    
     var files = event.dataTransfer?.files;
-
     if (files && files.length > 0) {
         for (let i = 0; i < files.length; i++) {
             const imageFile = files[i];
-            this.allFileNames.push(imageFile.name)
-
             const reader = new FileReader();
             reader.onload = (e: any) => {
+              const imageData = new ImageData(imageFile.name, e.target.result, null, null, 1);
               this.droppedImage = e.target.result;
-              this.selectedImages.push(this.droppedImage)
+              this.selectedImages.push(imageData)
             };
             reader.readAsDataURL(imageFile);
         }
-
-      
     }
     this.isDragOver = false;
-    
   }
 
 
   clearImg(index: number){
         
     this.selectedImages.splice(index, 1)
-    this.allFileNames.splice(index, 1)
+  
    
     if(this.imageInput && this.imageInput.nativeElement) {
         this.imageInput.nativeElement.value = '';
@@ -208,8 +159,6 @@ onDrop(event: DragEvent): void {
   }
 
   toggleComponents(component: string) {
-    console.log(this.gallery, "le composant");
-    
     if (component === 'gallery') {
       this.gallery = true;
       this.table = false;

@@ -14,7 +14,7 @@
                 <p>This is the content for modal type B.</p>
                 <div class="actions-buttons">
                     <button mat-raised-button class="submit-btn">Submit</button>
-                    <button mat-raised-button [mat-dialog-close]="false" class="close-btn">Fermer</button>
+                    <button mat-raised-button mat-dialog-close (click)="close()" class="close-btn">Fermer</button>
                 </div>
             </ng-container>
         </ng-template>

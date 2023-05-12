@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, observeOn, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Error } from '../models/error';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,37 +22,31 @@ export class UserService {
    public username: string | null = null;
   
    // error messages received from the login attempt
-   public errors: any = [];
+   private errors: any = [];
   
    constructor(private http: HttpClient) {
      this.httpOptions = {
        headers: new HttpHeaders({'Content-Type': 'application/json'})
      };
+
+    
    }
 
  
   public login(user: any):Observable<any> {
+    this.errors = []
     return this.http.post(environment.api_host + '/api/token/', JSON.stringify(user), this.httpOptions).pipe(
       catchError(error => {
-        
-        this.errors = error['error'];
-        
+        Object.keys(error.error).forEach(key => {
+          if(typeof(error.error[key]) == "string"){
+            this.errors.push(error.error[key])
+          } else {
+            this.errors.push(error.error[key][0])
+          }        
+        })
         return throwError(() => this.errors);
       })
     )
-    // .subscribe(
-    //   (data: any) => {
-    //     console.log(data);
-        
-    //     this.updateData(data['access']);
-    //   },
-    //   err => {
-    //     console.log(err, "erreur");
-    //     this.errors = err.error['detail'];
-    //     console.log(this.errors, "this");
-        
-    //   }
-    // );
   }
  
   // Refreshes the JWT token, to extend the time the user is logged in
@@ -60,9 +55,7 @@ export class UserService {
       (data: any) => {
         this.updateData(data['token']);
       },
-      (err: any) => {
-        console.log(err, "erreur");
-        
+      (err: any) => {  
         this.errors = err['error'];
       }
     );
@@ -76,13 +69,12 @@ export class UserService {
  
   public updateData(token: string) {
     this.token = token;
-    this.errors = [];
- 
+    this.errors = {};
     // decode the token to read the username and expiration timestamp
     const token_parts = this.token.split(/\./);
     const token_decoded = JSON.parse(window.atob(token_parts[1]));
-    console.log(token_decoded);
     this.token_expires = new Date(token_decoded.exp * 1000);
     this.username = token_decoded.username;
+    localStorage.setItem("user", JSON.stringify(token))
   }
 }
